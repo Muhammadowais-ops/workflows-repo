@@ -11,3 +11,11 @@ jobs:
       run: ls -ltrh
     - name: print path
       run: pwd | ls -ltrha
+
+    - name: checking out code
+      uses: actions/checkout@v4
+
+    - name: now check path
+      run: ls -ltrha
+      
+      
