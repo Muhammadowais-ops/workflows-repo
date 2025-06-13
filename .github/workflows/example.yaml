@@ -1,0 +1,12 @@
+name: GitHub Actions Demo
+on: [push]
+jobs:
+  testing-jobs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: testing first run
+      run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+
+    - name: print files
+      run: ls -ltrh
+      
