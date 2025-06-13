@@ -17,5 +17,12 @@ jobs:
 
     - name: now check path
       run: ls -ltrha
-      
+
+    - name: pass multiple commands in one go
+      run: |
+          echo "hello world"
+          printenv
+          echo $PATH
+          history
+
       
