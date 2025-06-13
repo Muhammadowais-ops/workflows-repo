@@ -33,6 +33,30 @@ jobs:
       run: |
           echo "printing"
           ls -ltrh
+    - name: testing artifact upload
+      run: |
+          echo "hello" >> new.txt
+          mkdir -p /opt/td/
+          mv new.txt /opt/td
+    - name: we are using upload artifact and set it rentention period for 5 days default is more than that artificact      
+      uses: actions/upload-artifact@v4
+      with:
+        name: my-artifact
+        path: /opt/td/new.txt
+        retention-days: 5
+
+  New-jobs2:
+    runs-on: ubuntu-latest
+    needs: [New-jobs]
+    steps:
+    - name: now i am downloading the artifact from upload artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: my-artifact
+    - name: now i am checking it download artifact
+      run: |
+          ls -ltrh  
+
 
 
 
