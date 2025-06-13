@@ -24,5 +24,17 @@ jobs:
           printenv
           echo $PATH
           history
+          touch new.txt
+  New-jobs:
+    runs-on: ubunutu-latest
+    needs: [testing-jobs]
+    steps:
+    - name: what does needs do it will wait for the first testing-jobs to be completed you can add multiple dependency
+      run: |
+          echo "printing"
+          ls -ltrh
+
+
+
 
       
