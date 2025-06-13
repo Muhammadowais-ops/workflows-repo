@@ -9,4 +9,5 @@ jobs:
 
     - name: print files
       run: ls -ltrh
-      
+    - name: print path
+      run: pwd | ls -ltrha
