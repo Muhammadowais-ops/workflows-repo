@@ -32,6 +32,8 @@ jobs:
           history
           touch new.txt
           echo ${{env.N_VAR}}
+          echo ${{secrets.REPO_PASS}}
+          echo ${{vars.TT_VAR}}
 
   New-jobs:
     runs-on: ubuntu-latest
