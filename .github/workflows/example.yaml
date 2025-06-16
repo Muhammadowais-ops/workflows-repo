@@ -1,6 +1,9 @@
 name: GitHub Actions Demo
 
 on: [push]
+### this is envirnoment will going to be accessible to all jobs
+env:
+  N_VAR: access
 
 jobs:
   testing-jobs:
@@ -28,6 +31,7 @@ jobs:
           echo $PATH
           history
           touch new.txt
+          echo ${{env.N_VAR}}
 
   New-jobs:
     runs-on: ubuntu-latest
