@@ -50,6 +50,7 @@ jobs:
           echo $CHECK_SEC
 
   New-jobs:
+    if: github.repository_owner == 'Muhammadowais-ops'
     runs-on: ubuntu-latest
     needs: [testing-jobs]
     concurrency:  # this is to remove any job 
