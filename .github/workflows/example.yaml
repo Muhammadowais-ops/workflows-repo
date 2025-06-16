@@ -15,6 +15,8 @@ on:
 
 env:
   N_VAR: access
+  CHECK_SEC: ${{ toJson(secrets) }}
+  GIT_CHK: ${{ toJson(github)}}
 
 jobs:
   testing-jobs:
@@ -45,6 +47,7 @@ jobs:
           echo ${{env.N_VAR}}
           echo ${{secrets.REPO_PASS}}
           echo ${{vars.TT_VAR}}
+          echo $CHECK_SEC
 
   New-jobs:
     runs-on: ubuntu-latest
