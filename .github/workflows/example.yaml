@@ -1,11 +1,16 @@
 name: GitHub Actions Demo
 
 on:
+  workflow_dispatch:
+    
   push:
     branches:
       - main        # Allow only on the 'main' branch
       - develop     # Optionally allow the 'develop' branch
       - '!feature/**'     # this will not allow to trigger on feature branch
+#  schedule:   to set cron like run for ervt one minute we can also set this options
+#    - cron: "*/1 * * * *"
+
 
 env:
   N_VAR: access
