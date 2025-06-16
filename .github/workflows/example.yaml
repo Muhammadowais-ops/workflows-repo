@@ -1,7 +1,12 @@
 name: GitHub Actions Demo
 
-on: [push]
-### this is envirnoment will going to be accessible to all jobs
+on:
+  push:
+    branches:
+      - main        # Allow only on the 'main' branch
+      - develop     # Optionally allow the 'develop' branch
+      - '!feature/**'     # this will not allow to trigger on feature branch
+
 env:
   N_VAR: access
 
@@ -72,7 +77,6 @@ jobs:
 
   Testing-envirnoment:
     runs-on: ubuntu-latest
-    # Job-level environment variable — accessible to all steps in this job
     env:
       MY_VAR: "Hello World"
       T_VAR: "Testing var"
@@ -81,10 +85,9 @@ jobs:
         run: echo $MY_VAR
 
       - name: Step with env
-        # Step-level environment variable — only accessible in this step
         env:
           STEP_VAR: "Step Value"
         run: echo $STEP_VAR
 
-      - name: we will able to access this variable overall in all steps
+      - name: we will be able to access this variable overall in all steps
         run: echo $T_VAR
