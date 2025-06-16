@@ -49,6 +49,9 @@ jobs:
   New-jobs:
     runs-on: ubuntu-latest
     needs: [testing-jobs]
+    concurrency:  # this is to remove any job 
+      group: to-remove-job 
+      cancel-in-progress: true 
     steps:
       - name: what does needs do - it will wait for the first testing-jobs to be completed
         run: |
@@ -88,6 +91,7 @@ jobs:
       T_VAR: "Testing var"
     steps:
       - name: Print variable - using job-level environment variable
+        timeout-minutes: 2
         run: echo $MY_VAR
 
       - name: Step with env
