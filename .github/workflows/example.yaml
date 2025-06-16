@@ -66,13 +66,19 @@ jobs:
 
   Testing-envirnoment:
     runs-on: ubuntu-latest
+    # Job-level environment variable — accessible to all steps in this job
     env:
       MY_VAR: "Hello World"
+      T_VAR: "Testing var"
     steps:
       - name: Print variable - using job-level environment variable
         run: echo $MY_VAR
 
       - name: Step with env
+        # Step-level environment variable — only accessible in this step
         env:
           STEP_VAR: "Step Value"
         run: echo $STEP_VAR
+
+      - name: we will able to access this variable overall in all steps
+        run: echo $T_VAR
