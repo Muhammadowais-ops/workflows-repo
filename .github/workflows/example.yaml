@@ -1,8 +1,9 @@
 name: GitHub Actions Demo
 
 on:
+## this workflow_dispatch help you tun run trigger manually also by providing you the button option  
   workflow_dispatch:
-    
+
   push:
     branches:
       - main        # Allow only on the 'main' branch
