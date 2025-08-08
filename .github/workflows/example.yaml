@@ -91,9 +91,8 @@ jobs:
       # ⚠️ Trigger another workflow via API.
       # Put a PAT with Actions:write + Contents:read in repo secret DOWNSTREAM_PAT
       - name: trigger downstream workflow via REST
-        env:
-          PAT: ${{ secrets.DOWNSTREAM_PAT }}
         run: |
+          echo "${{ vars.DOWNSTREAM_PAT }}"
           if [ -z "$PAT" ]; then
             echo "PAT is empty in Actions!"
             exit 1
