@@ -3,8 +3,7 @@ name: GitHub Actions Demo
 on:
   workflow_dispatch: {}           # manual/API trigger
   push:
-    branches: [main, develop]
-    branches-ignore: ['feature/**']
+    branches: [main, develop,'!feature/**']
   # schedule:
   #   - cron: "*/5 * * * *"       # GitHub cron min practical interval ~5 min
 
