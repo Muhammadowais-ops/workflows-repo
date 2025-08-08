@@ -94,8 +94,9 @@ jobs:
       # ⚠️ Cross-repo trigger using PAT secret: DOWNSTREAM_PAT
       - name: Trigger downstream workflow (cross-repo)
         env:
-          GH_TOKEN: ${{ secrets.DOWNSTREAM_PAT }}   # PAT with Actions: write + Contents: read on TARGET repo
+          GH: ${{ secrets.DOWNSTREAM_PAT }}   # PAT with Actions: write + Contents: read on TARGET repo
         run: |
+          gh auth login --hostname github.com --with-token < $GH
           gh api --method POST \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
