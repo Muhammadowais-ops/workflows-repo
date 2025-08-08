@@ -13,11 +13,6 @@ env:
   # CHECK_SEC: ${{ toJson(secrets) }}
   # GIT_CHK:  ${{ toJson(github) }}
 
-  # ==== Cross-repo trigger config (edit these) ====
-  TARGET_OWNER: OWNER
-  TARGET_REPO: TARGET_REPO
-  TARGET_WORKFLOW: github-actions    # Use exact workflow file name OR numeric ID
-  TARGET_REF: master                 # Branch/tag in TARGET repo
 
 jobs:
   testing-jobs:
@@ -101,7 +96,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/Muhammadowais-ops/github-actions-test-java/actions/workflows/github-actions.yaml/dispatches \
-            -f ref=${{ env.TARGET_REF }}
+            -f ref=master
 
           # If TARGET_WORKFLOW is a file, ensure it's the exact filename, e.g. `github-actions.yml`.
           # Or switch to numeric workflow ID for reliability.
