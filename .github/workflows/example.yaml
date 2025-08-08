@@ -91,7 +91,11 @@ jobs:
         env:
           GH: ${{ secrets.DOWNSTREAM_PAT }}   # PAT with Actions: write + Contents: read on TARGET repo
         run: |
-          echo "$GH" | gh auth login --hostname github.com --with-token
+          echo "$GH" | gh auth login --hostname github.com --with-token                   ################## there are two option to run workflow for differenet repo like trigger pipeline in different 
+                                                                                           ##### project which is test java repo as you can see for that we can use two method one is gh github cli and another one is curl i use 
+                                                                                           ######## github cli because curl is having some issues in github so better to use github cli to trigger pipeline
+                                                                                           ######### also the pipeline which you want to trigger it from rest api make sure the pipeline has 
+                                                                                           ####################### workflow dispatch in it or otherwise your rest api will not work
           gh api --method POST \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
