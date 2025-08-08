@@ -1,74 +1,74 @@
 name: GitHub Actions Demo
 
 on:
-## this workflow_dispatch help you tun run trigger manually also by providing you the button option  
-  workflow_dispatch:
-
+  workflow_dispatch: {}           # manual/API trigger
   push:
     branches:
-      - main        # Allow only on the 'main' branch
-      - develop     # Optionally allow the 'develop' branch
-      - '!feature/**'     # this will not allow to trigger on feature branch
-#  schedule:   to set cron like run for ervt one minute we can also set this options
-#    - cron: "*/1 * * * *"
-
+      - main
+      - develop
+    branches-ignore:
+      - 'feature/**'              # ignore feature branches
 
 env:
   N_VAR: access
-  CHECK_SEC: ${{ toJson(secrets) }}
-  GIT_CHK: ${{ toJson(github)}}
+  # ❌ Do NOT dump secrets/contexts to logs.
+  # CHECK_SEC: ${{ toJson(secrets) }}   # <- remove
+  # GIT_CHK:  ${{ toJson(github) }}     # <- remove
 
 jobs:
   testing-jobs:
     runs-on: ubuntu-latest
     steps:
       - name: testing first run
-        run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+        run: echo "🎉 Triggered by a ${{ github.event_name }} event."
 
-      - name: print files
+      - name: print files (workspace before checkout)
         run: ls -ltrh
 
-      - name: print path
-        run: pwd | ls -ltrha
+      - name: print path (don't pipe pwd into ls)
+        run: |
+          pwd
+          ls -ltrha
 
       - name: checking out code
         uses: actions/checkout@v4
 
-      - name: now check path
+      - name: now check path (after checkout)
         run: ls -ltrha
 
       - name: pass multiple commands in one go
+        env:
+          TT_VAR: ${{ vars.TT_VAR }}
         run: |
           echo "hello world"
-          printenv
-          echo $PATH
-          history
+          printenv | sort
+          echo "$PATH"
           touch new.txt
-          echo ${{env.N_VAR}}
-          echo ${{secrets.REPO_PASS}}
-          echo ${{vars.TT_VAR}}
-          echo $CHECK_SEC
+          echo "${{ env.N_VAR }}"
+          # Never print secrets:
+          # echo "${{ secrets.REPO_PASS }}"
+          echo "$TT_VAR"
 
   New-jobs:
     if: github.repository_owner == 'Muhammadowais-ops'
     runs-on: ubuntu-latest
     needs: [testing-jobs]
-    concurrency:  # this is to remove any job 
-      group: to-remove-job 
-      cancel-in-progress: true 
+    concurrency:
+      group: to-remove-job
+      cancel-in-progress: true
     steps:
-      - name: what does needs do - it will wait for the first testing-jobs to be completed
+      - name: needs explanation
         run: |
-          echo "printing"
+          echo "This waits for testing-jobs to finish"
           ls -ltrh
 
-      - name: testing artifact upload
+      - name: create an artifact file
         run: |
-          echo "hello" >> new.txt
+          echo "hello" > new.txt
           mkdir -p /opt/td/
-          mv new.txt /opt/td
+          mv new.txt /opt/td/
 
-      - name: we are using upload artifact and set its retention period to 5 days
+      - name: upload artifact (kept 5 days)
         uses: actions/upload-artifact@v4
         with:
           name: my-artifact
@@ -79,14 +79,26 @@ jobs:
     runs-on: ubuntu-latest
     needs: [New-jobs]
     steps:
-      - name: now i am downloading the artifact from upload artifact
+      - name: download artifact
         uses: actions/download-artifact@v4
         with:
           name: my-artifact
 
-      - name: now i am checking it downloaded artifact
+      - name: check downloaded artifact
+        run: ls -ltrh
+
+      # ⚠️ Trigger another workflow via API.
+      # Put a PAT with Actions:write + Contents:read in repo secret DOWNSTREAM_PAT
+      - name: trigger downstream workflow via REST
+        env:
+          PAT: ${{ secrets.DOWNSTREAM_PAT }}
         run: |
-          ls -ltrh
+          curl -L -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $PAT" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/Muhammadowais-ops/github-actions-test-java/actions/workflows/github-actions.yaml/dispatches \
+            -d '{"ref":"master"}'
 
   Testing-envirnoment:
     runs-on: ubuntu-latest
@@ -94,14 +106,14 @@ jobs:
       MY_VAR: "Hello World"
       T_VAR: "Testing var"
     steps:
-      - name: Print variable - using job-level environment variable
+      - name: Print variable - job-level env
         timeout-minutes: 2
-        run: echo $MY_VAR
+        run: echo "$MY_VAR"
 
-      - name: Step with env
+      - name: Step with its own env
         env:
           STEP_VAR: "Step Value"
-        run: echo $STEP_VAR
+        run: echo "$STEP_VAR"
 
-      - name: we will be able to access this variable overall in all steps
-        run: echo $T_VAR
+      - name: Access job-level var in any step (fixed)
+        run: echo "$T_VAR"
