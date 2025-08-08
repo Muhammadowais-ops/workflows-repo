@@ -94,6 +94,10 @@ jobs:
         env:
           PAT: ${{ secrets.DOWNSTREAM_PAT }}
         run: |
+          if [ -z "$PAT" ]; then
+            echo "PAT is empty in Actions!"
+            exit 1
+          fi
           curl -L \
             -X POST\
             -H "Accept: application/vnd.github+json" \
